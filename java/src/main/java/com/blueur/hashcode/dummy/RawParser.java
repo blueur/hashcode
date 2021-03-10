@@ -9,8 +9,12 @@ import java.util.List;
 
 public class RawParser extends Parser<List<String>> {
 
+    public RawParser(Path path) throws IOException {
+        super(path);
+    }
+
     @Override
-    public List<String> parse(Path path) throws IOException {
-        return Files.readAllLines(path);
+    public List<String> parse() throws IOException {
+        return Files.readAllLines(this.path);
     }
 }
