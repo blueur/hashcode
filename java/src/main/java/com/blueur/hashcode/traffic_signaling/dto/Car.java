@@ -8,5 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Car {
     private final int id;
+    private int pathsCount;
     private List<Street> paths;
 }

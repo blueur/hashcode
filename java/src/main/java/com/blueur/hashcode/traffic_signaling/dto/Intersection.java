@@ -1,13 +1,15 @@
 package com.blueur.hashcode.traffic_signaling.dto;
 
-import io.vavr.collection.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
 public class Intersection {
     private final int id;
-    private List<Street> incomingStreets = List.empty();
-    private List<Street> outgoingStreets = List.empty();
+    private Set<Street> incomingStreets = new HashSet<>();
+    private Set<Street> outgoingStreets = new HashSet<>();
 }

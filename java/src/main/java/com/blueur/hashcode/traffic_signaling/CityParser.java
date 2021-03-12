@@ -2,46 +2,43 @@ package com.blueur.hashcode.traffic_signaling;
 
 import com.blueur.hashcode.common.Parser;
 import com.blueur.hashcode.traffic_signaling.dto.Car;
-import com.blueur.hashcode.traffic_signaling.dto.Input;
+import com.blueur.hashcode.traffic_signaling.dto.City;
 import com.blueur.hashcode.traffic_signaling.dto.Intersection;
 import com.blueur.hashcode.traffic_signaling.dto.Street;
-import io.vavr.collection.SortedMap;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.util.function.Function;
+import java.util.Iterator;
 
-public class CityParser extends Parser<Input> {
-    public CityParser(Path path) throws IOException {
+public class CityParser extends Parser<City> {
+    public CityParser(Path path) {
         super(path);
     }
 
     @Override
-    public Input parse() throws IOException {
-        Input input = new Input();
-        readLine(input,
-                integer(Input::setDuration),
-                integer(Input::setIntersectionsCount),
-                integer(Input::setStreetsCount),
-                integer(Input::setCarsCount),
-                integer(Input::setScore)
-        );
-        fillList(input, Input::setIntersections, input.getIntersectionsCount(), Intersection::new);
-        readLines(input, Input::setStreets, input.getStreetsCount(),
-                parseElement(Street::new,
-                        integer((street, integer) -> street.setStart(input.getIntersections().get(integer))),
-                        integer((street, integer) -> street.setEnd(input.getIntersections().get(integer))),
-                        Street::setName,
-                        integer(Street::setLength)
-                )
-        );
-        final SortedMap<String, Street> nameStreets = input.getStreets()
-                .toSortedMap(Street::getName, Function.identity());
-        readLines(input, Input::setCars, input.getCarsCount(),
-                parseElementList(Car::new,
-                        Car::setPaths, s -> nameStreets.get(s).get()
-                )
-        );
-        return input;
+    public City parseIterator(Iterator<String> fileIterator) {
+        return object(City::new,
+                line(
+                        field(integer(City::setDuration)),
+                        field(integer(City::setIntersectionsCount)),
+                        field(integer(City::setStreetsCount)),
+                        field(integer(City::setCarsCount)),
+                        field(integer(City::setScore))
+                ),
+                list(City::getIntersectionsCount, City::setIntersections, city -> objectIndex(Intersection::new)),
+                sortedMap(City::getStreetsCount, City::setStreets, Street::getName, city -> object(Street::new,
+                        line(
+                                field(integer((street, i) -> street.setStart(city.getIntersections().get(i)))),
+                                field(integer((street, i) -> street.setEnd(city.getIntersections().get(i)))),
+                                field(Street::setName),
+                                field(integer(Street::setLength))
+                        )
+                )),
+                list(City::getCarsCount, City::setCars, city -> objectIndex(Car::new,
+                        line(
+                                field(integer(Car::setPathsCount)),
+                                list(Car::getPathsCount, Car::setPaths, car -> iterator -> integer -> city.getStreets().get(iterator.next()).get())
+                        )
+                ))
+        ).apply(fileIterator);
     }
 }

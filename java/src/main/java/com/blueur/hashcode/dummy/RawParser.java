@@ -2,19 +2,22 @@ package com.blueur.hashcode.dummy;
 
 import com.blueur.hashcode.common.Parser;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class RawParser extends Parser<List<String>> {
 
-    public RawParser(Path path) throws IOException {
+    public RawParser(Path path) {
         super(path);
     }
 
     @Override
-    public List<String> parse() throws IOException {
-        return Files.readAllLines(this.path);
+    public List<String> parseIterator(Iterator<String> fileIterator) {
+        final Iterable<String> iterable = () -> fileIterator;
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

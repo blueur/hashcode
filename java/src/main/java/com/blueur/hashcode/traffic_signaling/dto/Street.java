@@ -1,24 +1,27 @@
 package com.blueur.hashcode.traffic_signaling.dto;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Street {
-    private final int id;
+    @EqualsAndHashCode.Include
     private String name;
     private int length;
+    @ToString.Exclude
     private Intersection start;
+    @ToString.Exclude
     private Intersection end;
 
     public void setStart(Intersection start) {
         this.start = start;
-        start.getOutgoingStreets().push(this);
+        start.getOutgoingStreets().add(this);
     }
 
     public void setEnd(Intersection end) {
         this.end = end;
-        end.getIncomingStreets().push(this);
+        end.getIncomingStreets().add(this);
     }
 }
