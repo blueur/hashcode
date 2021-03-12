@@ -17,11 +17,11 @@ public class Street {
 
     public void setStart(Intersection start) {
         this.start = start;
-        start.getOutgoingStreets().add(this);
+        start.setOutgoingStreets(start.getOutgoingStreets().add(this));
     }
 
     public void setEnd(Intersection end) {
         this.end = end;
-        end.getIncomingStreets().add(this);
+        end.setIncomingStreets(end.getIncomingStreets().add(this));
     }
 }

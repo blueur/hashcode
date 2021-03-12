@@ -11,8 +11,8 @@ public class DummyApplication {
         final Executor<List<String>, List<String>> executor = Executor.<List<String>, List<String>>builder()
                 .folder("problem/2021-traffic_signaling")
                 .parser(RawParser::new)
-                .solver(new IdentitySolver<>())
-                .writer(new RawWriter())
+                .solver(IdentitySolver::new)
+                .writer(RawWriter::new)
                 .build();
 //        executor.execute("a.txt");
         executor.executeAll();
