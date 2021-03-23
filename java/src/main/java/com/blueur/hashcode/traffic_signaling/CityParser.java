@@ -24,7 +24,7 @@ public class CityParser extends Parser<City> {
                         field(integer(City::setCarsCount)),
                         field(integer(City::setScore))
                 ),
-                list(City::getIntersectionsCount, City::setIntersections, city -> objectIndex(Intersection::new)),
+                list(City::getIntersectionsCount, City::setIntersections, city -> object(Intersection::new)),
                 sortedMap(City::getStreetsCount, City::setStreets, Street::getName, city -> object(Street::new,
                         line(
                                 field(integer((street, i) -> street.setStart(city.getIntersections().get(i)))),
@@ -33,7 +33,7 @@ public class CityParser extends Parser<City> {
                                 field(integer(Street::setLength))
                         )
                 )),
-                list(City::getCarsCount, City::setCars, city -> objectIndex(Car::new,
+                list(City::getCarsCount, City::setCars, city -> object(Car::new,
                         line(
                                 field(integer(Car::setPathsCount)),
                                 list(Car::getPathsCount, Car::setPaths, car -> iterator -> integer -> city.getStreets().get(iterator.next()).get())

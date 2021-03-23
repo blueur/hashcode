@@ -46,7 +46,7 @@ public abstract class Parser<I> {
     }
 
     @SafeVarargs
-    protected static <T> Function1<Iterator<String>, Function1<Integer, T>> objectIndex(Function1<Integer, T> constructor, BiConsumer<T, Iterator<String>>... consumers) {
+    protected static <T> Function1<Iterator<String>, Function1<Integer, T>> object(Function1<Integer, T> constructor, BiConsumer<T, Iterator<String>>... consumers) {
         return iterator -> index -> {
             final T t = constructor.apply(index);
             for (BiConsumer<T, Iterator<String>> consumer : consumers) {
