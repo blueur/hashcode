@@ -24,7 +24,7 @@ public class Executor<I, O> {
     @NonNull
     Class<?> application;
     @NonNull
-    String problem;
+    Path problemPath;
     @NonNull
     Function<Path, Parser<I>> parser;
     @NonNull
@@ -36,23 +36,26 @@ public class Executor<I, O> {
 
     @Builder
     public Executor(@NonNull Class<?> application,
-                    @NonNull String problem,
+                    @NonNull String problemFolder,
                     @NonNull Function<Path, Parser<I>> parser,
                     @NonNull Supplier<Solver<I, O>> solver,
                     @NonNull Function<Path, Writer<O>> writer) throws IOException {
         this.application = application;
-        this.problem = problem;
+        this.problemPath = Path.of(problemFolder).toAbsolutePath().normalize();
         this.parser = parser;
         this.solver = solver;
         this.writer = writer;
-        this.outputPath = Path.of(problem, OUTPUT_FOLDER);
+        this.outputPath = this.problemPath.resolve(OUTPUT_FOLDER);
+        if (Files.notExists(problemPath)) {
+            throw new IllegalArgumentException("problem folder not found: " + problemPath);
+        }
         Files.createDirectories(outputPath);
-        log.info("output folder: {}", outputPath.toAbsolutePath());
+        log.info("output folder: {}", outputPath);
     }
 
     private I parse(String inputFile) throws IOException {
-        final Path inputPath = Path.of(problem, inputFile).toAbsolutePath().normalize();
-        log.info("executing input {}", inputPath.toString());
+        final Path inputPath = problemPath.resolve(inputFile);
+        log.info("executing input {}", inputPath);
         return parser.apply(inputPath).parse();
     }
 
@@ -70,8 +73,7 @@ public class Executor<I, O> {
 
     @SuppressWarnings("ConstantConditions")
     public void executeAll() throws Throwable {
-        final File file = new File(problem);
-        execute(file.list((dir, name) -> name.endsWith(".txt") || name.endsWith(".in")));
+        execute(problemPath.toFile().list((dir, name) -> name.endsWith(".txt") || name.endsWith(".in")));
     }
 
     public void testParse(String... inputFiles) throws IOException {
@@ -85,7 +87,7 @@ public class Executor<I, O> {
     }
 
     public void zipSource() throws IOException {
-        final Path rootPath = Path.of("java");
+        final Path rootPath = Path.of(".");
         final Path sourcePath = Path.of("src", "main", "java");
         final Path zipPath = outputPath.resolve(SOURCE_ZIP_FILE);
         final File zipFile = zipPath.toFile();
@@ -97,10 +99,11 @@ public class Executor<I, O> {
                     .directoryPath(sourcePath.resolve(getPath(application)))
                     .filename("*.java")
                     .filename("*.gradle")
+                    .filename("*.properties")
                     .build()
                     .zipFile(rootPath.toFile());
         }
-        log.info("source zipped at {}", zipPath.toAbsolutePath());
+        log.info("source zipped at {}", zipPath);
     }
 
     private Path getPath(Class<?> type) {

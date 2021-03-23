@@ -1,11 +1,12 @@
 plugins {
+    id 'java'
+    id 'application'
+    id 'idea'
     id 'org.springframework.boot' version '2.4.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-    id 'idea'
 }
 
-group = 'com.blueur'
+group = 'com.blueur.hashcode'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -25,9 +26,8 @@ dependencies {
     implementation 'commons-io:commons-io:2.8.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-test {
-    useJUnitPlatform()
+application {
+    mainClass = app
 }

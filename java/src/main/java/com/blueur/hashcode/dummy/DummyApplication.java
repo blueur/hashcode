@@ -9,7 +9,8 @@ import java.util.List;
 public class DummyApplication {
     public static void main(String[] args) throws Throwable {
         final Executor<List<String>, List<String>> executor = Executor.<List<String>, List<String>>builder()
-                .problem("problem/2021-traffic_signaling")
+                .application(DummyApplication.class)
+                .problemFolder("../problem/2021-traffic_signaling")
                 .parser(RawParser::new)
                 .solver(IdentitySolver::new)
                 .writer(RawWriter::new)

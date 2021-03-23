@@ -10,7 +10,7 @@ public class TrafficSignalingApplication {
     public static void main(String[] args) throws Throwable {
         final Executor<City, List<Schedule>> executor = Executor.<City, List<Schedule>>builder()
                 .application(TrafficSignalingApplication.class)
-                .problem("problem/2021-traffic_signaling")
+                .problemFolder("../problem/2021-traffic_signaling")
                 .parser(CityParser::new)
                 .solver(NaiveSolver::new)
                 .writer(SchedulesWriter::new)
