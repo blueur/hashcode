@@ -31,3 +31,13 @@ dependencies {
 application {
     mainClass = app
 }
+
+task resolveDependencies {
+    doLast {
+        project.rootProject.allprojects.each { subProject ->
+            subProject.buildscript.configurations.each { configuration ->
+                configuration.resolve()
+            }
+        }
+    }
+}
