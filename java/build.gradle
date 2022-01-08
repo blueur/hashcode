@@ -17,11 +17,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.vavr:vavr:0.10.3'
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'commons-io:commons-io:2.8.0'
-    compileOnly 'org.projectlombok:lombok:1.18.18'
-    annotationProcessor 'org.projectlombok:lombok:1.18.18'
+    implementation 'io.vavr:vavr:0.10.4'
+    implementation 'ch.qos.logback:logback-classic:1.2.10'
+    implementation 'commons-io:commons-io:2.11.0'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 application {
