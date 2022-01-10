@@ -22,11 +22,11 @@ public class PreferenceParser extends Parser<Preference> {
                 list(Preference::getClientsCount, Preference::setClients, preference -> idObject(Client::new,
                         line(
                                 field(integer(Client::setLikedIngredientsCount)),
-                                list(Client::getLikedIngredientsCount, Client::setLikedIngredients, client -> stringIterator -> integer -> stringIterator.next())
+                                set(Client::getLikedIngredientsCount, Client::setLikedIngredients, client -> string)
                         ),
                         line(
                                 field(integer(Client::setDislikedIngredientsCount)),
-                                list(Client::getDislikedIngredientsCount, Client::setDislikedIngredients, client -> stringIterator -> integer -> stringIterator.next())
+                                set(Client::getDislikedIngredientsCount, Client::setDislikedIngredients, client -> string)
                         )
                 ))
         ).apply(fileIterator);

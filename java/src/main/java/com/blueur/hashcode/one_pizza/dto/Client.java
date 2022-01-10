@@ -1,6 +1,6 @@
 package com.blueur.hashcode.one_pizza.dto;
 
-import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class Client {
     private final int id;
     private int likedIngredientsCount;
-    private List<String> likedIngredients;
+    private Set<String> likedIngredients;
     private int dislikedIngredientsCount;
-    private List<String> dislikedIngredients;
+    private Set<String> dislikedIngredients;
 }

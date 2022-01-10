@@ -3,6 +3,7 @@ package com.blueur.hashcode.common;
 
 import io.vavr.Function1;
 import io.vavr.collection.List;
+import io.vavr.collection.Set;
 import io.vavr.collection.SortedMap;
 
 import java.io.IOException;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 
 public abstract class Parser<I> {
     protected final Path path;
+    protected final Function1<Iterator<String>, Function1<Integer, String>> string = iterator -> index -> iterator.next();
+
 
     protected Parser(Path path) {
         this.path = path;
@@ -76,6 +79,10 @@ public abstract class Parser<I> {
                     .map(index -> function.apply(t).apply(iterator).apply(index));
             setter.accept(t, list);
         };
+    }
+
+    protected static <T, U> BiConsumer<T, Iterator<String>> set(Function1<T, Integer> count, BiConsumer<T, Set<U>> setter, Function1<T, Function1<Iterator<String>, Function1<Integer, U>>> function) {
+        return list(count, (t, list) -> setter.accept(t, list.toSortedSet()), function);
     }
 
     protected static <T, K extends Comparable<? super K>, V> BiConsumer<T, Iterator<String>> sortedMap(Function1<T, Integer> count, BiConsumer<T, SortedMap<K, V>> setter, Function1<V, K> keyMapper, Function1<T, Function1<Iterator<String>, V>> function) {
