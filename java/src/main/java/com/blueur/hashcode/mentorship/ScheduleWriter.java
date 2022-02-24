@@ -17,7 +17,7 @@ public class ScheduleWriter extends Writer<Schedule> {
         writer.println(output.getAssignments().length());
         output.getAssignments().forEach(assignment -> {
             writer.println(assignment.getId());
-            writer.println(assignment.getRoles().collect(Collectors.joining(" ")));
+            writer.println(assignment.getContributors().collect(Collectors.joining(" ")));
         });
     }
 }

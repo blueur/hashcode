@@ -4,10 +4,9 @@ import com.blueur.hashcode.common.Parser;
 import com.blueur.hashcode.mentorship.dto.Contributor;
 import com.blueur.hashcode.mentorship.dto.Project;
 import com.blueur.hashcode.mentorship.dto.Team;
-import io.vavr.collection.List;
-import io.vavr.collection.Map;
-import io.vavr.collection.Stream;
-import io.vavr.collection.TreeMap;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.*;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -21,21 +20,6 @@ public class TeamParser extends Parser<Team> {
 
     @Override
     public Team parseIterator(Iterator<String> fileIterator) {
-        /*return object(Team::new,
-                line(
-                        field(integer(Team::setContributorsCount)),
-                        field(integer(Team::setProjectsCount))
-                ),
-                list(Team::getContributorsCount, Team::setContributors, team -> object(Contributor::new,
-                                line(
-                                        field(Contributor::setId),
-                                        field(integer(Contributor::setSkillsCount))
-                                ),
-                                this.<Contributor, Skill>list(Contributor::getSkillsCount, Contributor::setSkills, contributor -> this.<Skill>object(Skill::new))
-                        )
-                )
-        ).apply(fileIterator);
-        */
         Integer[] firstLine = Arrays.stream(fileIterator.next().split(" ")).map(Integer::parseInt).toArray(Integer[]::new);
         int contributorsCount = firstLine[0];
         int projectsCount = firstLine[1];
@@ -43,7 +27,7 @@ public class TeamParser extends Parser<Team> {
             String[] line = fileIterator.next().split(" ");
             String name = line[0];
             int skillsCount = Integer.parseInt(line[1]);
-            Map<String, Integer> skills = TreeMap.empty();
+            Map<String, Integer> skills = LinkedHashMap.empty();
             for (int j = 0; j < skillsCount; j++) {
                 String[] skillLine = fileIterator.next().split(" ");
                 skills = skills.put(skillLine[0], Integer.parseInt(skillLine[1]));
@@ -62,10 +46,10 @@ public class TeamParser extends Parser<Team> {
             int score = Integer.parseInt(line[2]);
             int bestBefore = Integer.parseInt(line[3]);
             int rolesCount = Integer.parseInt(line[4]);
-            Map<String, Integer> roles = TreeMap.empty();
+            List<Tuple2<String, Integer>> roles = List.empty();
             for (int j = 0; j < rolesCount; j++) {
                 String[] roleLine = fileIterator.next().split(" ");
-                roles = roles.put(roleLine[0], Integer.parseInt(roleLine[1]));
+                roles = roles.append(Tuple.of(roleLine[0], Integer.parseInt(roleLine[1])));
             }
             return Project.builder()
                     .id(name)

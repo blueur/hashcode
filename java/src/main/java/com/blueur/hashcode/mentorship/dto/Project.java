@@ -1,5 +1,7 @@
 package com.blueur.hashcode.mentorship.dto;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +15,5 @@ public class Project {
     final Integer score;
     final Integer bestBefore;
     final Integer rolesCount;
-    final Map<String, Integer> skills;
+    final List<Tuple2<String, Integer>> skills;
 }

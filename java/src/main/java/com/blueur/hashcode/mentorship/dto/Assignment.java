@@ -9,5 +9,5 @@ import lombok.Data;
 @Builder
 public class Assignment {
     final String id;
-    final List<String> roles;
+    final List<String> contributors;
 }
