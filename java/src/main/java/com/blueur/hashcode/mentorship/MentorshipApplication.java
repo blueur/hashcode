@@ -16,7 +16,7 @@ public class MentorshipApplication {
                 .solver(NaiveSolver::new)
                 .writer(ScheduleWriter::new)
                 .build();
-//        executor.execute("a.txt");
-        executor.executeAll();
+        executor.execute("a_an_example.in.txt");
+//        executor.executeAll();
     }
 }

@@ -13,5 +13,5 @@ public class Project {
     final Integer score;
     final Integer bestBefore;
     final Integer rolesCount;
-    final Map<String, Integer> roles;
+    final Map<String, Integer> skills;
 }
