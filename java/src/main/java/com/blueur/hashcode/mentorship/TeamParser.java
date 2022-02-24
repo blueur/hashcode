@@ -4,14 +4,14 @@ import com.blueur.hashcode.common.Parser;
 import com.blueur.hashcode.mentorship.dto.Contributor;
 import com.blueur.hashcode.mentorship.dto.Project;
 import com.blueur.hashcode.mentorship.dto.Team;
-import io.vavr.API;
-import io.vavr.collection.*;
+import io.vavr.collection.List;
+import io.vavr.collection.Map;
+import io.vavr.collection.Stream;
+import io.vavr.collection.TreeMap;
 
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TeamParser extends Parser<Team> {
 

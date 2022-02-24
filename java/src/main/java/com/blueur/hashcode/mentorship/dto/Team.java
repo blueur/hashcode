@@ -3,7 +3,6 @@ package com.blueur.hashcode.mentorship.dto;
 import io.vavr.collection.List;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Builder

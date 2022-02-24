@@ -1,12 +1,11 @@
 package com.blueur.hashcode.mentorship.dto;
 
 import io.vavr.collection.List;
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@Builder
 public class Schedule {
-    private int assignmentsCount;
     private List<Assignment> assignments;
 }
