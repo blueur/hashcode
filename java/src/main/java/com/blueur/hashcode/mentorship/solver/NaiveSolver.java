@@ -29,12 +29,12 @@ public class NaiveSolver extends Solver<Team, Schedule> {
                 Integer minSkillLevel = skillWithLevel._2;
                 Stream.range(minSkillLevel, 11)
                         .flatMap(skillLevel -> contributorsBySkill.get(skillWithLevel._1).computeIfAbsent(skillLevel, s -> List.of()))
-                        .filter(contributor -> !contributors.contains(contributor.getId()))
-                        .map(Contributor::getId)
+                        .filter(contributor -> !contributors.contains(contributor.getName()))
+                        .map(Contributor::getName)
                         .headOption().forEach(contributors::add);
             }
 
-            if (contributors.size() == project.getRolesCount()) {
+            if (contributors.size() == project.getSkillsCount()) {
                 assignmentList.add(
                         Assignment
                                 .builder()

@@ -24,7 +24,7 @@ public class ParallelLearningSolver extends Solver<Team, Schedule> {
         /* skill -> niveau -> contributors */
 
         java.util.Set<String> plannedContributors = new java.util.HashSet<>();
-        java.util.Set<String> plannedProjects =  new java.util.HashSet<>();
+        java.util.Set<String> plannedProjects = new java.util.HashSet<>();
 
         do {
             plannedContributors.clear();
@@ -34,37 +34,35 @@ public class ParallelLearningSolver extends Solver<Team, Schedule> {
                     Integer minSkillLevel = skillWithLevel._2;
                     Stream.range(minSkillLevel, 11)
                             .flatMap(skillLevel -> contributorsBySkill.get(skillWithLevel._1).computeIfAbsent(skillLevel, s -> java.util.List.of()))
-                            .filter(contributor -> !plannedContributors.contains(contributor.getId()))
-                            .filter(contributor -> contributors.stream().noneMatch(existingContributor -> existingContributor.getId().equals(contributor.getId())))
+                            .filter(contributor -> !plannedContributors.contains(contributor.getName()))
+                            .filter(contributor -> contributors.stream().noneMatch(existingContributor -> existingContributor.getName().equals(contributor.getName())))
                             .headOption().forEach(contributors::add);
                 }
 
-                if (contributors.size() == project.getRolesCount()) {
+                if (contributors.size() == project.getSkillsCount()) {
                     List<Contributor> vavrContributors = List.ofAll(contributors);
                     assignmentList.add(
                             Assignment
                                     .builder()
                                     .id(project.getId())
-                                    .contributors(vavrContributors.map(Contributor::getId))
+                                    .contributors(vavrContributors.map(Contributor::getName))
                                     .build()
                     );
                     vavrContributors.zip(project.getSkills())
-                                    .forEach(contributorWithSkill -> {
-                                        io.vavr.collection.Map<String, Integer> skillsOfContributor = contributorWithSkill._1.getSkills();
-                                        String skill = contributorWithSkill._2._1;
-                                        Integer requiredSkillLevel = contributorWithSkill._2._2;
-                                        if (requiredSkillLevel >= skillsOfContributor.get(skill).get()) {
-                                            int newSkillLevel = skillsOfContributor.get(skill).get() + 1;
-                                            contributorWithSkill._1.setSkills(skillsOfContributor.put(skill, newSkillLevel));
-                                        }
-                                    });
+                            .forEach(contributorWithSkill -> {
+                                io.vavr.collection.Map<String, Integer> skillsOfContributor = contributorWithSkill._1.getSkills();
+                                String skill = contributorWithSkill._2._1;
+                                Integer requiredSkillLevel = contributorWithSkill._2._2;
+                                if (requiredSkillLevel >= skillsOfContributor.get(skill).get()) {
+                                    int newSkillLevel = skillsOfContributor.get(skill).get() + 1;
+                                    contributorWithSkill._1.setSkills(skillsOfContributor.put(skill, newSkillLevel));
+                                }
+                            });
                     plannedProjects.add(project.getId());
-                    plannedContributors.addAll(contributors.stream().map(Contributor::getId).collect(Collectors.toList()));
+                    plannedContributors.addAll(contributors.stream().map(Contributor::getName).collect(Collectors.toList()));
                 }
             }
         } while (!plannedContributors.isEmpty());
-
-
 
 
         return Schedule.builder().assignments(List.ofAll(assignmentList)).build();

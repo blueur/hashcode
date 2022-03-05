@@ -18,25 +18,25 @@ public class CityParser extends Parser<City> {
     public City parseIterator(Iterator<String> fileIterator) {
         return object(City::new,
                 line(
-                        field(integer(City::setDuration)),
-                        field(integer(City::setIntersectionsCount)),
-                        field(integer(City::setStreetsCount)),
-                        field(integer(City::setCarsCount)),
-                        field(integer(City::setScore))
+                        integer(City::setDuration),
+                        integer(City::setIntersectionsCount),
+                        integer(City::setStreetsCount),
+                        integer(City::setCarsCount),
+                        integer(City::setScore)
                 ),
-                list(City::getIntersectionsCount, City::setIntersections, city -> idObject(Intersection::new)),
+                idList(City::getIntersectionsCount, City::setIntersections, city -> idObject(Intersection::new)),
                 sortedMap(City::getStreetsCount, City::setStreets, Street::getName, city -> object(Street::new,
                         line(
-                                field(integer((street, i) -> street.setStart(city.getIntersections().get(i)))),
-                                field(integer((street, i) -> street.setEnd(city.getIntersections().get(i)))),
-                                field(Street::setName),
-                                field(integer(Street::setLength))
+                                integer((street, i) -> street.setStart(city.getIntersections().get(i))),
+                                integer((street, i) -> street.setEnd(city.getIntersections().get(i))),
+                                string(Street::setName),
+                                integer(Street::setLength)
                         )
                 )),
-                list(City::getCarsCount, City::setCars, city -> idObject(Car::new,
+                idList(City::getCarsCount, City::setCars, city -> idObject(Car::new,
                         line(
-                                field(integer(Car::setPathsCount)),
-                                list(Car::getPathsCount, Car::setPaths, car -> iterator -> integer -> city.getStreets().get(iterator.next()).get())
+                                integer(Car::setPathsCount),
+                                idList(Car::getPathsCount, Car::setPaths, car -> iterator -> integer -> city.getStreets().get(iterator.next()).get())
                         )
                 ))
         ).apply(fileIterator);

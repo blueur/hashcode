@@ -17,15 +17,15 @@ public class PreferenceParser extends Parser<Preference> {
     public Preference parseIterator(Iterator<String> fileIterator) {
         return object(Preference::new,
                 line(
-                        field(integer(Preference::setClientsCount))
+                        integer(Preference::setClientsCount)
                 ),
-                list(Preference::getClientsCount, Preference::setClients, preference -> idObject(Client::new,
+                idList(Preference::getClientsCount, Preference::setClients, preference -> idObject(Client::new,
                         line(
-                                field(integer(Client::setLikedIngredientsCount)),
+                                integer(Client::setLikedIngredientsCount),
                                 set(Client::getLikedIngredientsCount, Client::setLikedIngredients, client -> string)
                         ),
                         line(
-                                field(integer(Client::setDislikedIngredientsCount)),
+                                integer(Client::setDislikedIngredientsCount),
                                 set(Client::getDislikedIngredientsCount, Client::setDislikedIngredients, client -> string)
                         )
                 ))

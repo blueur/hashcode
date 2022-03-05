@@ -4,11 +4,8 @@ import com.blueur.hashcode.common.Solver;
 import com.blueur.hashcode.mentorship.dto.*;
 import io.vavr.Tuple2;
 import io.vavr.Tuple3;
-import io.vavr.collection.HashSet;
-import io.vavr.collection.Set;
 import io.vavr.collection.Stream;
 import lombok.extern.slf4j.Slf4j;
-import io.vavr.collection.List;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -26,7 +23,7 @@ public class ParallelNaiveSolver extends Solver<Team, Schedule> {
         /* skill -> niveau -> contributors */
 
         java.util.Set<String> plannedContributors = new java.util.HashSet<>();
-        java.util.Set<String> plannedProjects =  new java.util.HashSet<>();
+        java.util.Set<String> plannedProjects = new java.util.HashSet<>();
 
         do {
             plannedContributors.clear();
@@ -36,13 +33,13 @@ public class ParallelNaiveSolver extends Solver<Team, Schedule> {
                     Integer minSkillLevel = skillWithLevel._2;
                     Stream.range(minSkillLevel, 11)
                             .flatMap(skillLevel -> contributorsBySkill.get(skillWithLevel._1).computeIfAbsent(skillLevel, s -> java.util.List.of()))
-                            .filter(contributor -> !plannedContributors.contains(contributor.getId()))
-                            .filter(contributor -> !contributors.contains(contributor.getId()))
-                            .map(Contributor::getId)
+                            .filter(contributor -> !plannedContributors.contains(contributor.getName()))
+                            .filter(contributor -> !contributors.contains(contributor.getName()))
+                            .map(Contributor::getName)
                             .headOption().forEach(contributors::add);
                 }
 
-                if (contributors.size() == project.getRolesCount()) {
+                if (contributors.size() == project.getSkillsCount()) {
                     assignmentList.add(
                             Assignment
                                     .builder()
@@ -55,8 +52,6 @@ public class ParallelNaiveSolver extends Solver<Team, Schedule> {
                 }
             }
         } while (!plannedContributors.isEmpty());
-
-
 
 
         return Schedule.builder().assignments(io.vavr.collection.List.ofAll(assignmentList)).build();
